@@ -4,5 +4,9 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root():
+def get():
     return {"message": "Hello World"}
+
+@app.post("/items/{quantity}")
+async def create(quantity: int):
+    return {"message": f"{quantity} items created"}
