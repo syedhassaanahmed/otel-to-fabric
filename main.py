@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from opentelemetry import trace
+from opentelemetry import metrics
 
 app = FastAPI()
 
