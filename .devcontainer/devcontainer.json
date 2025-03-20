@@ -23,6 +23,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"bierner.markdown-mermaid",
 				"charliermarsh.ruff",
 				"github.copilot",
 				"ms-azuretools.vscode-docker",
