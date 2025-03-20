@@ -1,6 +1,6 @@
 # otel-to-fabric
 
-```Mermaid
+```mermaid
 flowchart TD
     User((User)) -->|"Create Items"| FastAPI[FastAPI App]
     FastAPI -->|"Response"| User
