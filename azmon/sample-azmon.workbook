@@ -1,0 +1,149 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Sample OTel Workbook\n---"
+      },
+      "name": "Title"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "a67bd813-4320-4bdb-aec2-bd80eb5029a0",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "isRequired": true,
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 300000
+                },
+                {
+                  "durationMs": 900000
+                },
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2419200000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ],
+              "allowCustom": true
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": {
+              "durationMs": 1800000
+            },
+            "label": "Time Range"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components"
+      },
+      "name": "Time Range"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customMetrics\n| where timestamp {TimeRange}\n| where name == \"item.counter\"\n| extend itemType = tostring(customDimensions[\"item.type\"])\n| summarize TotalItems = sum(value) by bin(timestamp, 1m), itemType\n| render timechart",
+        "size": 1,
+        "title": "Basic Item Count Over Time",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components"
+      },
+      "name": "Basic Item Count Over Time"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "be5ad09e-6aba-4030-b619-ce46b0d97608",
+            "version": "KqlParameterItem/1.0",
+            "name": "Percentile",
+            "type": 1,
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": "90"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components"
+      },
+      "name": "Percentile"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "customMetrics\r\n| where timestamp {TimeRange}\r\n| where name == \"order.size\"\r\n| extend itemType = tostring(customDimensions[\"item.type\"])\r\n| extend orderSize = iff(valueCount > 0, valueSum / valueCount, 0.0)\r\n| summarize SizePercentile=percentile(orderSize, {Percentile}) by bin(timestamp, 5m), itemType\r\n| render timechart",
+        "size": 1,
+        "title": "Order Size Distribution P{Percentile}",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components"
+      },
+      "name": "Order Size Distribution Percentile"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let timeInterval = 5m;\r\ncustomMetrics\r\n| where timestamp {TimeRange}\r\n| where name == \"item.counter\"\r\n| summarize CurrentPeriod = sum(valueSum) by bin(timestamp, timeInterval)\r\n| serialize\r\n| extend PreviousPeriod = iif(prev(CurrentPeriod) > 0, prev(CurrentPeriod), 0.0)\r\n| extend GrowthRate = iff(PreviousPeriod > 0, (CurrentPeriod - PreviousPeriod) / PreviousPeriod * 100, 0.0)\r\n| project timestamp, GrowthRate\r\n| where isnotnull(GrowthRate)\r\n| render columnchart",
+        "size": 1,
+        "title": "Growth Rate",
+        "queryType": 0,
+        "resourceType": "microsoft.insights/components"
+      },
+      "name": "Growth Rate"
+    }
+  ],
+  "fallbackResourceIds": [
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
