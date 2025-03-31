@@ -18,6 +18,7 @@ flowchart TD
 - Create a `.env` file with the Application Insights Connection String. `sample.env` is provided as example.
 
 ## Run the E2E Solution
+Open the solution in VS Code [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) or [GitHub Codespaces](https://github.com/codespaces).
 ```sh
 docker compose up
 ```
