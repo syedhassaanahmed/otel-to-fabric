@@ -16,7 +16,11 @@ metrics.set_meter_provider(provider)
 meter = metrics.get_meter("item.counter.meter")
 
 item_counter = meter.create_counter(
-    "item.counter", unit="items", description="Counts the number of items created"
+    "item.counter", unit="items", description="Counts the cumulative number of items created"
+)
+
+item_histogram = meter.create_histogram(
+    "order.size", unit="items", description="Distribution of numner of items created"
 )
 
 app = FastAPI()
@@ -29,5 +33,9 @@ def get():
 
 @app.post("/items/{quantity}")
 def create(quantity: int):
-    item_counter.add(quantity, attributes={"item.type": "item_type_1"})
+    item_type = "item_type_1"
+
+    item_counter.add(quantity, attributes={"item.type": item_type})
+    item_histogram.record(quantity, attributes={"item.type": item_type})
+
     return {"message": f"{quantity} items created"}

@@ -3,7 +3,8 @@ services:
     image: otel/opentelemetry-collector-contrib
     ports:
       - 4317:4317 # OTLP gRPC receiver
-      - 4318:4318 # OTLP http receiver
+    environment:
+      - AZURE_MONITOR_CONNECTION_STRING=${AZURE_MONITOR_CONNECTION_STRING}
     volumes:
       - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
 
@@ -21,7 +22,7 @@ services:
     volumes:
       - ./load-generator.sh:/load-generator.sh
     environment:
-      - API_ENDPOINT=http://app:8000/items
+      - API_ENDPOINT=http://app:8000
     command: sh /load-generator.sh
     depends_on:
       - app
