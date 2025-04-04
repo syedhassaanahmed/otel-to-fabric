@@ -410,7 +410,7 @@ wheels = [
 ]
 
 [[package]]
-name = "otel-to-fabric"
+name = "otel-to-azmon"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

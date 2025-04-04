@@ -1,4 +1,4 @@
-# otel-to-fabric
+# otel-to-azmon
 
 ## Data Flow
 
@@ -6,9 +6,13 @@
 flowchart TD
     User((User)) -->|"Create Items"| FastAPI[FastAPI App]
     FastAPI -->|"Response"| User
-    FastAPI -->|"OTel metrics over gRPC"| Collector[OTel Collector]
-    Collector --> AzMon[Azure Monitor]
-    Collector --> Fabric[Microsoft Fabric]
+    FastAPI -->|"OTel metrics over gRPC"| Receiver[OTLP Receiver]
+    subgraph OTelCollector
+    Receiver --> AzMonExporter[Azure Monitor Exporter]
+    Receiver -.-> OtherExporter[Other Exporter]
+    end
+    AzMonExporter --> AzMon[(Azure Monitor)]
+    OtherExporter -.-> Other[(Other OTel backends)]
 ```
 
 ## Azure Monitor Setup

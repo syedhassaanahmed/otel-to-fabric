@@ -10,7 +10,7 @@ import os
 endpoint = os.getenv("OTLP_ENDPOINT", "http://localhost:4317")
 exporter = OTLPMetricExporter(endpoint=endpoint)
 reader = PeriodicExportingMetricReader(exporter)
-resource = Resource(attributes={SERVICE_NAME: "otel-to-fabric"})
+resource = Resource(attributes={SERVICE_NAME: "otel-to-azmon"})
 provider = MeterProvider(resource=resource, metric_readers=[reader])
 metrics.set_meter_provider(provider)
 meter = metrics.get_meter("item.counter.meter")
